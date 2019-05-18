@@ -18,6 +18,6 @@ public class ChelistDiarioApiApplication extends SpringBootServletInitializer {
 
 	@GetMapping("/health")
 	public ResponseEntity<Boolean> health() {
-			return new ResponseEntity<>(Boolean.FALSE, HttpStatus.OK);
+			return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
 	}
 }
