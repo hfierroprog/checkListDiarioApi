@@ -3,6 +3,7 @@ package cl.hfierroprog.chelistDiarioApi.service.impl;
 import cl.hfierroprog.chelistDiarioApi.entity.Pool;
 import cl.hfierroprog.chelistDiarioApi.entity.Registro;
 import cl.hfierroprog.chelistDiarioApi.entity.Tarea;
+import cl.hfierroprog.chelistDiarioApi.pojo.TareasResponse;
 import cl.hfierroprog.chelistDiarioApi.repository.PoolDao;
 import cl.hfierroprog.chelistDiarioApi.repository.RegistroDao;
 import cl.hfierroprog.chelistDiarioApi.repository.TareaDao;
@@ -31,21 +32,20 @@ public class TareaServiceImpl implements TareaService {
     private PoolDao poolDao;
 
     @Override
-    public List<Tarea> getTareas() throws ParseException {
+    public TareasResponse getTareas() throws ParseException {
         DateTime dateTime = new DateTime();
         Date fechaActual = dateTime.toDate();
-
+        TareasResponse response = new TareasResponse();
         Optional<Registro> registro = registroDao.findByFecha(fechaActual);
-
         if(registro.isPresent()) {
-            return registro.get().getTareas();
+            response.setFecha(parseDateToResponse(fechaActual));
+            response.setTareas(registro.get().getTareas());
+            return response;
         } else {
             Registro registroNuevo = new Registro();
-
             registroNuevo.setFecha(fechaActual);
             registroNuevo = registroDao.save(registroNuevo);
             List<Tarea> tareas = new ArrayList<>();
-
             for(Pool p : poolDao.findAll()) {
                 Tarea tareaNueva = new Tarea();
 
@@ -56,7 +56,9 @@ public class TareaServiceImpl implements TareaService {
                 tareaDao.save(tareaNueva);
                 tareas.add(tareaNueva);
             }
-            return tareas;
+            response.setFecha(parseDateToResponse(fechaActual));
+            response.setTareas(tareas);
+            return response;
         }
     }
 
@@ -75,5 +77,14 @@ public class TareaServiceImpl implements TareaService {
             return null;
 
         }
+    }
+
+    /*
+     * Convertir la fecha al formato dd/mm/YYYY
+     */
+    String parseDateToResponse(Date fecha) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
+        String fechaString = sdf.format(fecha);
+        return fechaString;
     }
 }
