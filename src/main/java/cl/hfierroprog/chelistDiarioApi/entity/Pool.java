@@ -1,7 +1,7 @@
 package cl.hfierroprog.chelistDiarioApi.entity;
 
-import java.io.Serializable;
 import javax.persistence.*;
+import java.io.Serializable;
 
 
 /**

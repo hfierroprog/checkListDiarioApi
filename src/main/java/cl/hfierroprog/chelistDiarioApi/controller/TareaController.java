@@ -1,6 +1,5 @@
 package cl.hfierroprog.chelistDiarioApi.controller;
 
-import cl.hfierroprog.chelistDiarioApi.entity.Tarea;
 import cl.hfierroprog.chelistDiarioApi.pojo.TareasResponse;
 import cl.hfierroprog.chelistDiarioApi.service.TareaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
