@@ -1,11 +1,8 @@
 package cl.hfierroprog.chelistDiarioApi.service.impl;
 
 import cl.hfierroprog.chelistDiarioApi.entity.Pool;
-import cl.hfierroprog.chelistDiarioApi.entity.Registro;
-import cl.hfierroprog.chelistDiarioApi.entity.Tarea;
 import cl.hfierroprog.chelistDiarioApi.repository.PoolDao;
 import cl.hfierroprog.chelistDiarioApi.repository.RegistroDao;
-import cl.hfierroprog.chelistDiarioApi.repository.TareaDao;
 import cl.hfierroprog.chelistDiarioApi.service.PoolService;
 import cl.hfierroprog.chelistDiarioApi.util.CheckListUtil;
 import cl.wom.common.exception.BadRequestException;
