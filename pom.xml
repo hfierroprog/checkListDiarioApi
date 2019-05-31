@@ -59,6 +59,12 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>cl.wom.common</groupId>
+			<artifactId>WomCommonException</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
