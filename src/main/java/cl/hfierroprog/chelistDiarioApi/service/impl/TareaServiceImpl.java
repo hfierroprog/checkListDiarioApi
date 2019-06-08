@@ -12,6 +12,7 @@ import cl.hfierroprog.chelistDiarioApi.util.CheckListUtil;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -67,6 +68,9 @@ public class TareaServiceImpl implements TareaService {
         }
     }
 
+    /**
+     * Cambia el estado de una tarea
+     */
     @Override
     public Tarea cambiarEstado(Integer id) {
         Optional<Tarea> tareaOptional = tareaDao.findById(id);
@@ -96,7 +100,8 @@ public class TareaServiceImpl implements TareaService {
     /**
      * Actualizar tareas del registro
      */
-    private Registro actualizarTareasRegistro(Registro registro) {
+    @Transactional
+    public Registro actualizarTareasRegistro(Registro registro) {
         List<Pool> poolList = poolDao.findAll();
         List<Tarea> tareas = registro.getTareas();
 
