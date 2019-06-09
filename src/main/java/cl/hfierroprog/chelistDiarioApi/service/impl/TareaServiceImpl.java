@@ -104,31 +104,36 @@ public class TareaServiceImpl implements TareaService {
     public Registro actualizarTareasRegistro(Registro registro) {
         List<Pool> poolList = poolDao.findAll();
         List<Tarea> tareas = registro.getTareas();
+        int conteo = 0;
 
-        for (Pool p : poolList) {
-            Optional<Tarea> tareaDB = tareaDao.findByTituloAndRegistro(p.getTitulo(), registro);
-            if (!tareaDB.isPresent()) {
-                Tarea tareaNueva = new Tarea();
-                tareaNueva.setTitulo(p.getTitulo());
-                tareaNueva.setRegistro(registro);
-                tareaNueva.setCompletado(false);
-                tareaNueva = tareaDao.save(tareaNueva);
-                tareas.add(tareaNueva);
+        if(conteo != 2) {
+            for (Pool p : poolList) {
+                Optional<Tarea> tareaDB = tareaDao.findByTituloAndRegistro(p.getTitulo(), registro);
+                if (!tareaDB.isPresent()) {
+                    Tarea tareaNueva = new Tarea();
+                    tareaNueva.setTitulo(p.getTitulo());
+                    tareaNueva.setRegistro(registro);
+                    tareaNueva.setCompletado(false);
+                    tareaNueva = tareaDao.save(tareaNueva);
+                    tareas.add(tareaNueva);
+                }
             }
-        }
 
-        for (Tarea t : tareas) {
-            Optional<Pool> poolDb = poolDao.findByTitulo(t.getTitulo());
-            if (!poolDb.isPresent()) {
-                tareaDao.delete(t);
-                if(tareas.size() - 1 == tareas.indexOf(t)) {
-                    tareas.remove(t);
-                    break;
-                } else {
-                    tareas.remove(t);
+            for (Tarea t : tareas) {
+                Optional<Pool> poolDb = poolDao.findByTitulo(t.getTitulo());
+                if (!poolDb.isPresent()) {
+                    tareaDao.delete(t);
+                    if(tareas.size() - 1 == tareas.indexOf(t)) {
+                        tareas.remove(t);
+                        break;
+                    } else {
+                        tareas.remove(t);
+                    }
                 }
             }
         }
+
+
 
         return registroDao.save(registro);
     }
