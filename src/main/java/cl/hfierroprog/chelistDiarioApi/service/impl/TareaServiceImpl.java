@@ -38,18 +38,16 @@ public class TareaServiceImpl implements TareaService {
 
     @Override
     public TareasResponse getTareas() throws ParseException {
-        DateTime dateTime = new DateTime();
-        Date fechaActual = dateTime.toDate();
         TareasResponse response = new TareasResponse();
-        Optional<Registro> registro = registroDao.findByFecha(fechaActual);
+        Optional<Registro> registro = checkListUtil.getRegistroHoy();
         if (registro.isPresent()) {
-            Registro registroDb = actualizarTareasRegistro(registro.get());
-            response.setFecha(parseDateToResponse(fechaActual));
+            Registro registroDb = registro.get();
+            response.setFecha(parseDateToResponse(registroDb.getFecha()));
             response.setTareas(registroDb.getTareas());
             return response;
         } else {
             Registro registroNuevo = new Registro();
-            registroNuevo.setFecha(fechaActual);
+            registroNuevo.setFecha(checkListUtil.getFechaActualDate());
             registroNuevo = registroDao.save(registroNuevo);
             List<Tarea> tareas = new ArrayList<>();
             for (Pool p : poolDao.findAll()) {
@@ -62,7 +60,7 @@ public class TareaServiceImpl implements TareaService {
                 tareaDao.save(tareaNueva);
                 tareas.add(tareaNueva);
             }
-            response.setFecha(parseDateToResponse(fechaActual));
+            response.setFecha(parseDateToResponse(checkListUtil.getFechaActualDate()));
             response.setTareas(tareas);
             return response;
         }
@@ -95,46 +93,5 @@ public class TareaServiceImpl implements TareaService {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
         String fechaString = sdf.format(fecha);
         return fechaString;
-    }
-
-    /**
-     * Actualizar tareas del registro
-     */
-    @Transactional
-    public Registro actualizarTareasRegistro(Registro registro) {
-        List<Pool> poolList = poolDao.findAll();
-        List<Tarea> tareas = registro.getTareas();
-        int conteo = 0;
-
-        if(conteo != 2) {
-            for (Pool p : poolList) {
-                Optional<Tarea> tareaDB = tareaDao.findByTituloAndRegistro(p.getTitulo(), registro);
-                if (!tareaDB.isPresent()) {
-                    Tarea tareaNueva = new Tarea();
-                    tareaNueva.setTitulo(p.getTitulo());
-                    tareaNueva.setRegistro(registro);
-                    tareaNueva.setCompletado(false);
-                    tareaNueva = tareaDao.save(tareaNueva);
-                    tareas.add(tareaNueva);
-                }
-            }
-
-            for (Tarea t : tareas) {
-                Optional<Pool> poolDb = poolDao.findByTitulo(t.getTitulo());
-                if (!poolDb.isPresent()) {
-                    tareaDao.delete(t);
-                    if(tareas.size() - 1 == tareas.indexOf(t)) {
-                        tareas.remove(t);
-                        break;
-                    } else {
-                        tareas.remove(t);
-                    }
-                }
-            }
-        }
-
-
-
-        return registroDao.save(registro);
     }
 }

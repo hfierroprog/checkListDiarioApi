@@ -19,15 +19,15 @@ public class CheckListUtil {
     /**
      * Obtener Registro de hoy base de datos
      */
-    public Registro getRegistroHoy() {
+    public Optional<Registro> getRegistroHoy() {
         DateTime dateTime = new DateTime();
         Date fechaActual = dateTime.toDate();
-        Optional<Registro> registroDb = registroDao.findByFecha(fechaActual);
+        return registroDao.findByFecha(fechaActual);
+    }
 
-        if(registroDb.isPresent()) {
-            return registroDb.get();
-        } else {
-            throw new NotFoundException("Registro no encontrado","Contacta al administrador", "404");
-        }
+    public Date getFechaActualDate() {
+        DateTime dateTime = new DateTime();
+        Date fechaActual = dateTime.toDate();
+        return fechaActual;
     }
 }
